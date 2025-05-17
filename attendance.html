@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كشف التواجد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100vw;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: #fff !important;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0;
+            background-color: white;
+            padding: 20px 0 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            text-align: center;
+            color: #1976d2;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Tajawal', sans-serif;
+            letter-spacing: 0.5px;
+            background: linear-gradient(145deg, #1976d2, #1565c0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px 0;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1000;
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: linear-gradient(90deg, #414345 0%, #232526 100%);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 16px;
+            margin-left: 4px;
+        }
+
+        .table-container {
+            width: 80%;
+            max-width: 1250px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(91,134,229,0.08);
+            overflow: hidden;
+            border: 1px solid #e8e8e8;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .signature-section {
+            margin-top: 10px;
+            margin-left: 30px;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            float: left;
+        }
+
+        .signature-section p {
+            margin: 2px 0;
+            font-size: 1.1em;
+            color: #2d3a4a;
+            line-height: 1.2;
+        }
+
+        .signature-section .title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e8e8e8;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1em;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .attendance-table th:first-child {
+            border-top-right-radius: 20px;
+        }
+
+        .attendance-table th:last-child {
+            border-top-left-radius: 20px;
+        }
+
+        .attendance-table tr:last-child td:first-child {
+            border-bottom-right-radius: 20px;
+        }
+
+        .attendance-table tr:last-child td:last-child {
+            border-bottom-left-radius: 20px;
+        }
+
+        .attendance-table th {
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 1.2em;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            border: 1px solid #414345;
+        }
+
+        .attendance-table td {
+            color: #2d3a4a;
+            font-weight: 600;
+            line-height: 1.4;
+            border: 1px solid #e8e8e8;
+        }
+
+        .attendance-table tr:first-child th {
+            border-top: 1px solid #414345;
+        }
+
+        .attendance-table tr:last-child td {
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .attendance-table td:first-child {
+            border-right: 1px solid #e8e8e8;
+        }
+
+        .attendance-table td:last-child {
+            border-left: 1px solid #e8e8e8;
+        }
+
+        .attendance-table td:nth-child(2) { /* الرتبة */
+            font-weight: 700;
+            color: #1976d2;
+            text-align: center;
+        }
+
+        .attendance-table td:nth-child(3) { /* الاسم */
+            font-weight: 700;
+            font-size: 1.15em;
+            color: #2d3a4a;
+            text-align: center;
+        }
+
+        .attendance-table td:nth-child(4) { /* النوبتجيه */
+            font-weight: 600;
+            color: #4CAF50;
+            text-align: center;
+        }
+
+        .attendance-table td:nth-child(5) { /* التاريخ */
+            font-weight: 600;
+            color: #d32f2f;
+            text-align: center;
+        }
+
+        .attendance-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .attendance-table tr:nth-child(even) {
+            background-color: #f6f8fa;
+        }
+
+        /* تحديد عرض الأعمدة */
+        .attendance-table th:nth-child(1), /* الرقم */
+        .attendance-table td:nth-child(1) {
+            width: 8% !important;
+        }
+
+        .attendance-table th:nth-child(2), /* الرتبة */
+        .attendance-table td:nth-child(2) {
+            width: 12% !important;
+        }
+
+        .attendance-table th:nth-child(3), /* الاسم */
+        .attendance-table td:nth-child(3) {
+            width: 40% !important;
+        }
+
+        .attendance-table th:nth-child(4), /* النوبتجيه */
+        .attendance-table td:nth-child(4) {
+            width: 20% !important;
+        }
+
+        .attendance-table th:nth-child(5), /* التاريخ */
+        .attendance-table td:nth-child(5) {
+            width: 20% !important;
+        }
+
+        .attendance-table td input.shift-input {
+            width: 90%;
+            padding: 4px 8px;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            background: #fafafa;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-family: 'Tajawal', sans-serif;
+            box-shadow: none;
+        }
+
+        .attendance-table td input.shift-input:focus {
+            outline: none;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .attendance-table td input.shift-input:hover {
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .attendance-table td input.shift-input::placeholder {
+            color: #999;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 50%;
+            transform: translateX(50%);
+            padding: 18px 32px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.4s cubic-bezier(.4,2,.3,1);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.13);
+            font-size: 1.15em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        .notification.success {
+            background: linear-gradient(145deg, #4CAF50, #2e7d32);
+        }
+
+        .notification.error {
+            background: linear-gradient(145deg, #f44336, #c62828);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50%) translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(50%) translateY(0) scale(1);
+            }
+        }
+
+        .hide-notification {
+            opacity: 0;
+            transform: translateX(50%) translateY(-30px) scale(0.95);
+            transition: all 0.6s cubic-bezier(.4,2,.3,1);
+        }
+
+        @media print {
+            .back-button {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="window.location.href='index.html'">العودة</button>
+        <h1 class="page-title" style="color: #000; background: none; -webkit-background-clip: initial; background-clip: initial; -webkit-text-fill-color: initial;">كشف التواجد</h1>
+        <div class="table-container">
+            <table id="attendanceTable" class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>م</th>
+                        <th>الرتبة</th>
+                        <th>الاسم</th>
+                        <th>النوبتجيه</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceList">
+                </tbody>
+            </table>
+            <div class="signature-section">
+                <p class="title">التوقيع: (________________________)</p>
+                <p class="title">عميد / أحمد محمد جميل التهامـي</p>
+                <p class="title">قائـــــــــــد مــــركز الأمـــــــــداد الألــــــــــــــــــي    </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table id="attendanceTableCopy" class="attendance-table">
+            <thead>
+                <tr>
+                    <th>م</th>
+                    <th>الرتبة</th>
+                    <th>الاسم</th>
+                    <th>النوبتجيه</th>
+                    <th>التاريخ</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceListCopy">
+            </tbody>
+        </table>
+        <div class="signature-section">
+            <p class="title">التوقيع: (________________________)</p>
+            <p class="title">عميد / أحمد محمد جميل التهامـي</p>
+            <p class="title">قائـــــــــــد مــــركز الأمـــــــــداد الألــــــــــــــــــي    </p>
+        </div>
+    </div>
+
+    <script>
+        const ATTENDANCE_STORAGE_KEY = 'attendanceData';
+
+        // دالة لتحديث الجدول المنسوخ
+        function updateCopyTable() {
+            const originalTbody = document.getElementById('attendanceList');
+            const copyTbody = document.getElementById('attendanceListCopy');
+            if (originalTbody && copyTbody) {
+                copyTbody.innerHTML = '';
+                const originalRows = originalTbody.querySelectorAll('tr');
+                originalRows.forEach((row, idx) => {
+                    const newRow = row.cloneNode(true);
+                    // مزامنة قيمة input إذا وجد
+                    const origInput = row.querySelector('input.shift-input');
+                    const copyInput = newRow.querySelector('input.shift-input');
+                    if (origInput && copyInput) {
+                        copyInput.value = origInput.value;
+                        copyInput.readOnly = true;
+                        copyInput.style.background = '#f6f6f6';
+                    }
+                    copyTbody.appendChild(newRow);
+                });
+            }
+        }
+
+        // دالة لعرض الإشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            let icon = '';
+            if(type === 'success') icon = '✔️';
+            if(type === 'error') icon = '❌';
+            notification.innerHTML = `<span style='font-size:1.3em; margin-left:10px;'>${icon}</span>${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.classList.add('hide-notification');
+                setTimeout(() => notification.remove(), 600);
+            }, 3000);
+        }
+
+        // دالة لتنسيق التاريخ
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // دالة حفظ بيانات التواجد
+        function saveAttendanceData() {
+            try {
+                const tbody = document.getElementById('attendanceList');
+                const rows = tbody.getElementsByTagName('tr');
+                const data = [];
+                
+                for (let row of rows) {
+                    const rank = row.cells[1].textContent;
+                    const name = row.cells[2].textContent;
+                    const shift = row.cells[3].querySelector('input') ? row.cells[3].querySelector('input').value : '';
+                    const date = row.cells[4].textContent;
+                    
+                    data.push({
+                        number: parseInt(row.cells[0].textContent),
+                        rank: rank,
+                        name: name,
+                        shift: shift,
+                        date: rank === 'جندي' ? '' : date // لا نحفظ التاريخ للرتبة جندي
+                    });
+                }
+                
+                localStorage.setItem(ATTENDANCE_STORAGE_KEY, JSON.stringify(data));
+            } catch (error) {
+                console.error('خطأ في حفظ بيانات التواجد:', error);
+                showNotification('حدث خطأ في حفظ البيانات', 'error');
+            }
+        }
+
+        // دالة لإضافة سجل تواجد جديد
+        function addAttendanceRecord(rank, name) {
+            try {
+                const tbody = document.getElementById('attendanceList');
+                const row = document.createElement('tr');
+                
+                const numberCell = document.createElement('td');
+                numberCell.textContent = tbody.children.length + 1;
+                
+                const rankCell = document.createElement('td');
+                rankCell.textContent = rank;
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = name;
+                
+                const shiftCell = document.createElement('td');
+                if (rank !== 'جندي') {
+                    shiftCell.innerHTML = `<input type="text" class="shift-input" placeholder="">`;
+                    // إضافة مستمع حدث لحفظ التغييرات
+                    const shiftInput = shiftCell.querySelector('input');
+                    shiftInput.addEventListener('change', function() {
+                        const dateCell = row.cells[4];
+                        if (this.value.trim() === 'نوبتجي') {
+                            dateCell.textContent = formatDate(new Date());
+                        } else {
+                            dateCell.textContent = '';
+                        }
+                        saveAttendanceData();
+                        updateCopyTable(); // تحديث الجدول المنسوخ
+                    });
+                    // تحديث الجدول الثاني مباشرة أثناء الكتابة
+                    shiftInput.addEventListener('input', function() {
+                        updateCopyTable();
+                    });
+                }
+                
+                const dateCell = document.createElement('td');
+                dateCell.textContent = '';
+                
+                row.appendChild(numberCell);
+                row.appendChild(rankCell);
+                row.appendChild(nameCell);
+                row.appendChild(shiftCell);
+                row.appendChild(dateCell);
+                
+                tbody.appendChild(row);
+                saveAttendanceData();
+                showNotification('تم إضافة السجل بنجاح', 'success');
+                updateCopyTable(); // تحديث الجدول المنسوخ
+            } catch (error) {
+                console.error('خطأ في إضافة سجل التواجد:', error);
+                showNotification('حدث خطأ في إضافة السجل', 'error');
+            }
+        }
+
+        // جعل الدالة متاحة عالمياً
+        window.addAttendanceRecord = addAttendanceRecord;
+
+        // دالة لترتيب الرتب
+        function getRankOrder(rank) {
+            const rankOrder = {
+                'نقيب': 9,
+                'ملازم أول': 8,
+                'ملازم': 7,
+                'مساعد أول': 6,
+                'مساعد': 5,
+                'رقيب أول': 4,
+                'رقيب': 3,
+                'عريف': 2,
+                'جندي': 1
+            };
+            return rankOrder[rank] || 0;
+        }
+
+        // تحميل بيانات التواجد من Local Storage عند فتح الصفحة
+        window.addEventListener('load', function() {
+            const savedData = localStorage.getItem(ATTENDANCE_STORAGE_KEY);
+            const tbody = document.getElementById('attendanceList');
+            tbody.innerHTML = '';
+            if (savedData) {
+                let data = JSON.parse(savedData);
+                data.sort((a, b) => getRankOrder(b.rank) - getRankOrder(a.rank));
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    const numberCell = document.createElement('td');
+                    numberCell.textContent = index + 1;
+                    const rankCell = document.createElement('td');
+                    rankCell.textContent = item.rank;
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = item.name;
+                    const shiftCell = document.createElement('td');
+                    
+                    if (item.rank !== 'جندي') {
+                        shiftCell.innerHTML = `<input type="text" class="shift-input" value="${item.shift || ''}" placeholder="">`;
+                        // إضافة مستمع حدث لحفظ التغييرات
+                        const shiftInput = shiftCell.querySelector('input');
+                        shiftInput.addEventListener('change', function() {
+                            const dateCell = row.cells[4];
+                            if (this.value.trim() === 'نوبتجي') {
+                                dateCell.textContent = formatDate(new Date());
+                            } else {
+                                dateCell.textContent = '';
+                            }
+                            saveAttendanceData();
+                            updateCopyTable(); // تحديث الجدول المنسوخ
+                        });
+                        // تحديث الجدول الثاني مباشرة أثناء الكتابة
+                        shiftInput.addEventListener('input', function() {
+                            updateCopyTable();
+                        });
+                    }
+                    
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = item.shift === 'نوبتجي' ? item.date : '';
+                    
+                    row.appendChild(numberCell);
+                    row.appendChild(rankCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(shiftCell);
+                    row.appendChild(dateCell);
+                    
+                    tbody.appendChild(row);
+                });
+            }
+            updateCopyTable(); // تحديث الجدول المنسوخ بعد تحميل البيانات الأولية
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #f0f2f5;
+            --container-bg: #fff;
+            --text-main: #232526;
+            --text-title: #1976d2;
+            --button-bg: linear-gradient(90deg, #232526 0%, #414345 100%);
+            --button-hover-bg: linear-gradient(90deg, #414345 0%, #232526 100%);
+            --table-header-bg: linear-gradient(90deg, #232526 0%, #414345 100%);
+            --table-header-color: #fff;
+            --input-bg: #fff;
+            --input-border: #e0e0e0;
+            --input-focus: #4CAF50;
+            --row-hover: #e3f0fa;
+            --notification-success: linear-gradient(145deg, #4CAF50, #2e7d32);
+            --notification-error: linear-gradient(145deg, #f44336, #c62828);
+            --table-bg: #fff;
+            --table-row-bg: #fff;
+            --table-row-alt-bg: #f6f8fa;
+            --table-row-hover-bg: #e3f0fa;
+            --table-border: #e0e7ef;
+            --table-header-bg-solid: #232526;
+            --table-input-bg: #f6f8fa;
+            --table-input-border: #d1e3f8;
+        }
+        body.dark-mode {
+            --main-bg: #181a1b;
+            --container-bg: #232526;
+            --text-main: #e0e0e0;
+            --text-title: #90caf9;
+            --button-bg: linear-gradient(90deg, #232526 0%, #1976d2 100%);
+            --button-hover-bg: linear-gradient(90deg, #1976d2 0%, #232526 100%);
+            --table-header-bg: linear-gradient(90deg, #232526 0%, #1976d2 100%);
+            --table-header-color: #fff;
+            --input-bg: #232526;
+            --input-border: #444b52;
+            --input-focus: #90caf9;
+            --row-hover: #222b36;
+            --notification-success: linear-gradient(145deg, #388e3c, #2e7d32);
+            --notification-error: linear-gradient(145deg, #b71c1c, #c62828);
+            --table-bg: #232526;
+            --table-row-bg: #232526;
+            --table-row-alt-bg: #232b36;
+            --table-row-hover-bg: #222b36;
+            --table-border: #333a40;
+            --table-header-bg-solid: #1976d2;
+            --table-input-bg: #232b36;
+            --table-input-border: #1976d2;
+        }
+        html, body {
+            background: var(--main-bg);
+        }
+        body {
+            background-color: var(--main-bg);
+        }
+        .container {
+            background-color: var(--container-bg);
+        }
+        .page-title {
+            color: var(--text-title);
+            background: var(--table-header-bg);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .top-button, button {
+            background: var(--button-bg);
+        }
+        .top-button:hover, button:hover {
+            background: var(--button-hover-bg);
+        }
+        th {
+            background: var(--table-header-bg);
+            color: var(--table-header-color) !important;
+        }
+        tr, td, th {
+            color: var(--text-main);
+        }
+        input, select {
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-main);
+        }
+        input:focus, select:focus {
+            border-color: var(--input-focus);
+        }
+        tr:hover {
+            background: var(--row-hover);
+        }
+        .notification.success {
+            background: var(--notification-success);
+        }
+        .notification.error {
+            background: var(--notification-error);
+        }
+        /* بقية CSS كما هو */
+        html, body {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100vw;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0;
+            background-color: var(--container-bg);
+            padding: 20px 0 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            margin: 0 20px 20px 20px;
+            direction: rtl;
+            width: fit-content;
+            margin-right: 38%;
+        }
+
+        .top-button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .top-button:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .top-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            text-align: center;
+            color: var(--text-title);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Tajawal', sans-serif;
+            letter-spacing: 0.5px;
+            background: var(--table-header-bg);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px 0;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        select {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            background-color: var(--input-bg);
+            cursor: pointer;
+            min-width: 180px;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 20px;
+            padding-left: 45px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            transform: translateY(-1px);
+        }
+
+        select:hover {
+            border-color: var(--input-focus);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        input {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            transform: translateY(-1px);
+        }
+
+        input:hover {
+            border-color: var(--input-focus);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 12px 35px;
+            font-size: 16px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        button:hover::before {
+            transform: translateX(100%);
+        }
+
+        select option {
+            color: var(--text-main);
+            background: var(--input-bg);
+        }
+        select option:checked,
+        select option:hover {
+            background: var(--text-main);
+            color: var(--input-bg);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 40px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--table-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(91,134,229,0.08);
+            table-layout: fixed;
+        }
+
+        th {
+            background: var(--table-header-bg);
+            color: var(--table-header-color) !important;
+            font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+            font-weight: 800;
+            font-size: 1.13em;
+            white-space: nowrap;
+            border-bottom: 2.5px solid var(--table-header-bg);
+            letter-spacing: 1.2px;
+        }
+
+        tr {
+            background: var(--table-row-bg);
+            transition: background 0.2s;
+        }
+        tr:nth-child(even) {
+            background: var(--table-row-alt-bg);
+        }
+        tr:hover {
+            background: var(--table-row-hover-bg);
+        }
+
+        th, td {
+            padding: 7px 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--table-border);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            vertical-align: middle;
+            color: var(--text-main);
+        }
+
+        td input {
+            background: var(--table-input-bg);
+            border: 1.5px solid var(--table-input-border);
+            color: var(--text-main);
+        }
+        td input:focus {
+            background: var(--input-bg);
+            border-color: var(--input-focus);
+        }
+
+        /* تعديل عرض الأعمدة */
+        th:first-child, td:first-child {
+            width: 10% !important;
+            text-align: center;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            width: 5% !important;
+            color: #020000;
+            font-weight: 600;
+            padding: 15px 4px !important;
+            min-width: 35px !important;
+            text-align: center !important;
+            font-size: 1.2em !important;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            width: 8% !important;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        th:nth-child(4), td:nth-child(4) {
+            width: 45% !important;
+            text-align: right;
+            padding-right: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        td:nth-child(4) {
+            font-weight: bold;
+            letter-spacing: 0.3px;
+            line-height: 1.4;
+        }
+
+        th:nth-child(5), td:nth-child(5),
+        th:nth-child(6), td:nth-child(6) {
+            width: 10% !important;
+        }
+
+        th:nth-child(7), td:nth-child(7),
+        th:nth-child(8), td:nth-child(8) {
+            width: 15% !important;
+            text-align: center;
+        }
+
+        td input.date-input {
+            text-align: center;
+            width: 100%;
+            padding: 12px 8px;
+            font-size: 15px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        td input.date-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+
+        td input.date-input:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th:last-child, td:last-child {
+            width: 8% !important;
+            text-align: center;
+            white-space: nowrap;
+            padding: 8px 5px;
+        }
+
+        /* تعديل حجم مربعات الاختيار */
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            position: relative;
+            margin: 0;
+            appearance: none;
+            background-color: #fff;
+            border: 1.5px solid #4CAF50;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: #45a049;
+            box-shadow: 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
+        /* تنسيق مربعات الاختيار في عمود الحالة */
+        .status-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .status-box {
+            position: relative;
+            flex: 1 1 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.4,2,.3,1);
+            background-color: #fff;
+            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .status-box:first-child {
+            border: 2.2px solid #1976d2;
+        }
+
+        .status-box:last-child {
+            border: 2.2px solid #d32f2f;
+        }
+
+        .status-box input[type="checkbox"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .status-box span {
+            font-size: 11px;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s cubic-bezier(.4,2,.3,1);
+            z-index: 1;
+            letter-spacing: 1px;
+            text-align: center;
+            width: 100%;
+            user-select: none;
+        }
+
+        .status-box:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.10), 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        .status-box:first-child:hover {
+            border-color: #1565c0;
+        }
+
+        .status-box:last-child:hover {
+            border-color: #c62828;
+        }
+
+        .status-box:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10) inset;
+        }
+
+        .status-box input[type="checkbox"]:checked + span {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .status-box:first-child input[type="checkbox"]:checked + span {
+            background: #1976d2;
+            border-radius: 14px;
+            padding: 2px 6px;
+        }
+
+        .status-box:last-child input[type="checkbox"]:checked + span {
+            background: #d32f2f;
+            border-radius: 14px;
+            padding: 2px 6px;
+        }
+
+        .status-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .status-box:hover::before {
+            transform: translateX(100%);
+        }
+
+        .status-box input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+        /* تحسين مظهر الصفوف */
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* تحسين مظهر القائمة */
+        select option {
+            padding: 12px;
+            font-size: 16px;
+            background-color: white;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        select option:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        select option:first-child {
+            font-weight: 700;
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* تحسين مظهر القائمة المنسدلة في وضع التحديد */
+        select option:checked {
+            background: linear-gradient(145deg, #4CAF50, #2e7d32);
+            color: white;
+            font-weight: 700;
+        }
+
+        /* تحسين مظهر القائمة عند فتحها */
+        select:focus option:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* تنسيق النص بجانب مربعات الاختيار */
+        label span {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* تنسيق العمود المدمج */
+        .status-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .status-label:hover {
+            background-color: #e9ecef;
+        }
+
+        .status-label span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        /* تخصيص لون الخلفية عند التحديد */
+        .status-label input[type="checkbox"]:checked + span {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .status-label input[type="checkbox"]:checked ~ .status-label {
+            background-color: #e8f5e9;
+        }
+
+        th:nth-child(5), td:nth-child(5),
+        th:nth-child(6), td:nth-child(6) {
+            width: 10% !important;
+        }
+        td input.from-input,
+        td input.to-input,
+        td input.date-input {
+            font-weight: bold;
+            font-size: 1.15em;
+            color: #232526;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+        }
+        td input.from-input:focus, td input.to-input:focus {
+            border: 1.5px solid #4CAF50;
+            background: #fff;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 6px;
+            margin: 0 2px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+
+        .icon-btn:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .icon-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .icon-btn.edit-btn:hover {
+            background: #e3f2fd;
+        }
+
+        .icon-btn.delete-btn:hover {
+            background: #ffebee;
+        }
+
+        .icon-btn svg {
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .icon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .icon-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* تحديث أيقونات الإجراءات في الجدول */
+        .icon-btn.edit-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn.delete-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn.edit-btn svg path {
+            stroke: #1976d2;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn.delete-btn svg path {
+            stroke: #d32f2f;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn.edit-btn:hover svg path {
+            stroke: #1565c0;
+            stroke-width: 2;
+        }
+
+        .icon-btn.delete-btn:hover svg path {
+            stroke: #c62828;
+            stroke-width: 2;
+        }
+
+        .icon-btn:hover svg {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .checkmark-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid #bdbdbd;
+            background: #fff;
+            margin: 0 3px;
+            position: relative;
+            transition: border 0.2s;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .checkmark-box.mabit {
+            border-color: #1976d2;
+        }
+        .checkmark-box.muqim {
+            border-color: #d32f2f;
+        }
+        .checkmark-box input[type="checkbox"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .checkmark-box span {
+            font-size: 11px;
+            color: #333;
+            font-weight: 600;
+            z-index: 1;
+            pointer-events: none;
+            transition: color 0.2s, background 0.2s;
+        }
+        .checkmark-box.mabit input[type="checkbox"]:checked + span {
+            color: #1976d2;
+            background: #e3f2fd;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+        .checkmark-box.muqim input[type="checkbox"]:checked + span {
+            color: #d32f2f;
+            background: #ffebee;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+        .checkmark-box.mabit:active span,
+        .checkmark-box.muqim:active span {
+            background: none;
+            color: #fff;
+            border-radius: 5px;
+            padding: 1px 4px;
+        }
+        .modern-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            border: 2.5px solid #bdbdbd;
+            background: #fff;
+            margin: 0 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .modern-checkbox:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .modern-checkbox.mabit {
+            border-color: #1976d2;
+        }
+        .modern-checkbox.muqim {
+            border-color: #d32f2f;
+        }
+        .modern-checkbox input[type="checkbox"] {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .modern-checkbox span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            position: relative;
+            background: transparent;
+            z-index: 1;
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+            font-family: 'Tajawal', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .modern-checkbox.mabit span::before {
+            content: 'مبيت';
+        }
+        .modern-checkbox.muqim span::before {
+            content: 'مقيم';
+        }
+        .modern-checkbox.mabit input[type="checkbox"]:checked + span {
+            background-color: #1976d2;
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .modern-checkbox.muqim input[type="checkbox"]:checked + span {
+            background-color: #d32f2f;
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .modern-checkbox:active {
+            transform: scale(0.95);
+        }
+
+        /* تنسيق حقول التعديل المباشر */
+        .editable-cell {
+            position: relative;
+            padding: 0 !important;
+        }
+
+        .editable-cell input,
+        .editable-cell select {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 12px 8px;
+            font-size: 15px;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .editable-cell input:focus,
+        .editable-cell select:focus {
+            outline: none;
+            background: #f8f9fa;
+            box-shadow: inset 0 0 0 2px #4CAF50;
+        }
+
+        .editable-cell select {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            font-size: 14px;
+            padding: 8px 25px 8px 8px;
+            box-sizing: border-box;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 5px center;
+            background-size: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            text-align: right;
+        }
+
+        .editable-cell select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .editable-cell select option {
+            padding: 6px;
+            font-size: 13px;
+            background-color: white;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .edit-actions button {
+            padding: 5px 10px;
+            font-size: 13px;
+            border-radius: 6px;
+            min-width: 45px;
+            height: 28px;
+            margin: 0;
+        }
+
+        .edit-actions .save-btn,
+        .edit-actions .cancel-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .edit-actions .save-btn {
+            background: linear-gradient(145deg, #4CAF50, #2e7d32);
+        }
+
+        .edit-actions .cancel-btn {
+            background: linear-gradient(145deg, #f44336, #c62828);
+        }
+
+        .edit-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .edit-actions button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        td:nth-child(4) {
+            font-weight: bold;
+        }
+
+        td input.from-input,
+        td input.to-input {
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 50%;
+            transform: translateX(50%);
+            padding: 18px 32px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.4s cubic-bezier(.4,2,.3,1);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.13);
+            font-size: 1.15em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+            max-width: 90vw;
+            text-align: center;
+        }
+        .notification.success {
+            background: var(--notification-success);
+        }
+        .notification.error {
+            background: var(--notification-error);
+        }
+        .hide-notification {
+            opacity: 0;
+            transform: translateX(50%) translateY(-30px) scale(0.95);
+            transition: all 0.6s cubic-bezier(.4,2,.3,1);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50%) translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(50%) translateY(0) scale(1);
+            }
+        }
+        .table-container {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* تنسيق الجدول */
+        #attendanceTable {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background-color: var(--table-bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #attendanceTable th,
+        #attendanceTable td {
+            border: 1px solid var(--table-border);
+            padding: 12px;
+            text-align: right;
+        }
+
+        #attendanceTable th {
+            background: var(--table-header-bg-solid);
+            color: var(--table-header-color);
+            font-weight: bold;
+        }
+
+        /* تحديد عرض الأعمدة */
+        #attendanceTable th:nth-child(1), /* الرقم */
+        #attendanceTable td:nth-child(1) {
+            width: 8% !important;
+        }
+
+        #attendanceTable th:nth-child(2), /* الرتبة */
+        #attendanceTable td:nth-child(2) {
+            width: 8% !important;
+        }
+
+        #attendanceTable th:nth-child(3), /* الاسم */
+        #attendanceTable td:nth-child(3) {
+            width: 50% !important;
+        }
+
+        #attendanceTable th:nth-child(4), /* النوبتجيه */
+        #attendanceTable td:nth-child(4) {
+            width: 10% !important;
+        }
+
+        #attendanceTable th:nth-child(5), /* التاريخ */
+        #attendanceTable td:nth-child(5) {
+            width: 10% !important;
+        }
+
+        #attendanceTable tr:nth-child(even) {
+            background-color: var(--table-row-alt-bg);
+        }
+
+        #attendanceTable tr:hover {
+            background-color: var(--table-row-hover-bg);
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            margin-left: 50px;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            float: left;
+        }
+
+        .signature-section p {
+            margin: 5px 0;
+            font-size: 1.3em;
+            color: #2d3a4a;
+            line-height: 1.4;
+        }
+
+        .signature-section .title {
+            font-weight: 900;
+            font-size: 1.4em;
+            margin-top: 8px;
+            color: #000000;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* تحديد عرض أعمدة جدول يومية السير */
+        #dailyMovementSection .table-container {
+            width: 90%;
+            max-width: 2200px;
+            margin: 0 auto;
+            background-color: var(--table-bg);
+            border-radius: 30px;
+            box-shadow: 0 2px 12px rgba(91,134,229,0.08);
+            overflow: hidden;
+            border: 1px solid var(--table-border);
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        #dailyMovementTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background-color: var(--table-bg);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #dailyMovementTable th:nth-child(1), /* م */
+        #dailyMovementTable td:nth-child(1) {
+            width: 5% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #dailyMovementTable th:nth-child(2), /* الرتبة */
+        #dailyMovementTable td:nth-child(2) {
+            width: 12% !important;
+        }
+
+        #dailyMovementTable th:nth-child(3), /* الاسم */
+        #dailyMovementTable td:nth-child(3) {
+            width: 30% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #dailyMovementTable th:nth-child(4), /* من سعت */
+        #dailyMovementTable td:nth-child(4) {
+            width: 8% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #dailyMovementTable td:nth-child(4) {
+            text-align: center;
+            padding: 0;
+        }
+
+        #dailyMovementTable td:nth-child(4) span {
+            display: inline-block;
+            width: 40%;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        #dailyMovementTable th:nth-child(5), /* من يوم */
+        #dailyMovementTable td:nth-child(5) {
+            width: 14% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+
+        #dailyMovementTable th:nth-child(6), /* إلي سعت */
+        #dailyMovementTable td:nth-child(6) {
+            width: 8% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #dailyMovementTable th:nth-child(7), /* إلي يوم */
+        #dailyMovementTable td:nth-child(7) {
+            width: 14% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+
+        #dailyMovementTable th:nth-child(4), /* من سعت */
+        #dailyMovementTable td:nth-child(4),
+        #dailyMovementTable th:nth-child(6), /* إلي سعت */
+        #dailyMovementTable td:nth-child(6) {
+            width: 8% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #dailyMovementTable th:nth-child(5), /* من يوم */
+        #dailyMovementTable td:nth-child(5),
+        #dailyMovementTable th:nth-child(7), /* إلي يوم */
+        #dailyMovementTable td:nth-child(7) {
+            width: 12% !important;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+
+        #dailyMovementTable td:nth-child(4),
+        #dailyMovementTable td:nth-child(5),
+        #dailyMovementTable td:nth-child(6),
+        #dailyMovementTable td:nth-child(7) {
+            text-align: center;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        #dailyMovementTable td:nth-child(4) span,
+        #dailyMovementTable td:nth-child(5) span,
+        #dailyMovementTable td:nth-child(6) span,
+        #dailyMovementTable td:nth-child(7) span {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+            margin: 0 auto;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        @media print {
+            #dailyMovementTable th:nth-child(5),
+            #dailyMovementTable td:nth-child(5),
+            #dailyMovementTable th:nth-child(7),
+            #dailyMovementTable td:nth-child(7) {
+                text-align: center !important;
+                vertical-align: middle !important;
+                white-space: nowrap !important;
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 16px;
+        }
+
+        @media print {
+            .back-button {
+                display: none !important;
+            }
+            
+            #dailyMovementTable th:nth-child(5),
+            #dailyMovementTable td:nth-child(5),
+            #dailyMovementTable th:nth-child(7),
+            #dailyMovementTable td:nth-child(7) {
+                text-align: center !important;
+                vertical-align: middle !important;
+                white-space: nowrap !important;
+            }
+        }
+
+        #darkModeToggle {
+            position: fixed;
+            top: 22px;
+            left: 22px;
+            z-index: 2001;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7em;
+            font-weight: bold;
+            box-shadow: 0 4px 18px rgba(25,118,210,0.13);
+            background: var(--button-bg);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s, transform 0.3s;
+            outline: none;
+            border: none;
+        }
+        #darkModeToggle:hover {
+            background: var(--button-hover-bg);
+            transform: scale(1.12) rotate(-8deg);
+            box-shadow: 0 8px 32px rgba(25,118,210,0.18);
+        }
+        #darkModeToggle:active {
+            transform: scale(0.97);
+        }
+        #darkModeToggle .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: max-content;
+            background: #222;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 7px 16px;
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2002;
+            font-size: 1em;
+            font-family: 'Tajawal', Arial, sans-serif;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+        }
+        #darkModeToggle:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* تأثير جميل عند تمرير الماوس على صفوف الجدول الرئيسي */
+        #namesTable tbody tr {
+            transition: background 0.25s, box-shadow 0.25s, transform 0.18s;
+        }
+        #namesTable tbody tr:hover {
+            background: linear-gradient(90deg, #e3f0fa 60%, #fafdff 100%);
+            box-shadow: 0 6px 24px 0 rgba(25, 118, 210, 0.10), 0 1.5px 8px rgba(0,0,0,0.07);
+            transform: translateY(-2px) scale(1.012);
+            z-index: 2;
+        }
+        body.dark-mode #namesTable tbody tr:hover {
+            background: linear-gradient(90deg, #232b36 60%, #232526 100%);
+            box-shadow: 0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 1.5px 8px rgba(0,0,0,0.13);
+        }
+    </style>
+</head>
+<body>
+    <button id="darkModeToggle" title="تبديل الوضع الليلي/النهاري" aria-label="تبديل الوضع الليلي" style="position:fixed;top:22px;left:22px;z-index:2001;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7em;font-weight:bold;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:var(--button-bg);color:#fff;cursor:pointer;transition:all 0.3s, transform 0.3s;outline:none;border:none;">
+      <span id="darkModeIcon" style="display:inline-block;transition:transform 0.4s;">🌙</span>
+    </button>
+    <div class="container">
+        <h1 class="page-title" id="mainTitle" style="font-size: 2.5em; margin: 2px 0; text-align: center; color: #1976d2; font-weight: bold;">مركز الأمداد الألي</h1>
+        <div class="input-group">
+            <div class="input-container">
+                <select id="nameSelect">
+                    <option value="نقيب">نقيب</option>
+                    <option value="ملازم أول">ملازم أول</option>
+                    <option value="ملازم">ملازم</option>
+                    <option value="مساعد أول">مساعد أول</option>
+                    <option value="مساعد">مساعد</option>
+                    <option value="رقيب أول">رقيب أول</option>
+                    <option value="رقيب">رقيب</option>
+                    <option value="عريف">عريف</option>
+                    <option value="جندي">جندي</option>
+                </select>
+                <input type="text" id="nameInput" placeholder="أدخل الاسم هنا">
+            </div>
+            <button onclick="addName()">إضافة</button>
+        </div>
+        <div class="top-buttons" style="width:100%; display:flex; align-items:center; margin-bottom: 10px;">
+            <div style="flex-shrink:0; display:flex; gap:10px; align-items:center; margin-right: 20px;">
+                <select id="searchType" style="padding: 10px 16px; border-radius:100px; border: 1.5px solid #bdbdbd; font-size: 15px; text-align: right; font-family: 'Tajawal', sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                    <option value="all">البحث في الكل</option>
+                    <option value="rank">البحث في الرتبة</option>
+                    <option value="name">البحث في الاسم</option>
+                </select>
+                <input id="searchInput" type="text" placeholder="ابحث هنا..." style="width: 270px; padding: 10px 16px; border-radius: 100px; border: 1.5px solid #bdbdbd; font-size: 15px; text-align: right; font-family: 'Tajawal', sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+            </div>
+            <div style="display:flex; gap:20px; margin-right: 32px;margin-right: 100px;">
+                <button class="top-button" onclick="window.location.href='attendance.html'">كشف التواجد</button>
+                <button class="top-button" onclick="showDailyMovement()">يومية السير</button>
+                <button class="top-button" onclick="showPermits()">التصاريح</button>
+                <button class="top-button" onclick="window.location.href='shifts.html'">إدارة الورديات</button>
+                <button class="top-button" style="background:linear-gradient(90deg,#232526 0%,#414345 100%); color:#fff; font-weight:bold; min-width:170px;" onclick="updateDatesButtonHandler()">تعديل التاريخ</button>
+            </div>
+        </div>
+        <div class="table-container">
+        <table id="namesTable">
+            <thead>
+                <tr>
+                    <th>الحالة</th>
+                    <th>م</th>
+                    <th>الرتبة</th>
+                    <th>الاسم</th>
+                    <th>من سعت</th>
+                    <th>إلي سعت</th>
+                    <th>تاريخ اليوم</th>
+                    <th>تاريخ الغد</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="namesList">
+            </tbody>
+        </table>
+        </div>
+        <!-- أقسام الصفحات الفرعية -->
+        <div id="dailyMovementSection" style="display:none; margin-top:40px;">
+            <button class="back-button" onclick="showMainSection()">العودة</button>
+            <h1 class="page-title" style="margin-top: 45px; color: #000; font-size: 2.5em; background: none; -webkit-background-clip: initial; background-clip: initial; -webkit-text-fill-color: initial;">يومية السير</h1>
+            <div class="table-container">
+                <table id="dailyMovementTable">
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>الرتبة</th>
+                            <th>الاسم</th>
+                            <th>من سعت</th>
+                            <th>من يوم</th>
+                            <th>إلي سعت</th>
+                            <th>إلي يوم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyMovementList"></tbody>
+                </table>
+                <div class="signature-section">
+                    <p class="title">التوقيع: (________________________)</p>
+                    <p class="title">عميد / أحمد محمد جميل التهامـي</p>
+                    <p class="title">قائـــــــــــد مــــركز الأمـــــــــداد الألــــــــــــــــــي</p>
+                </div>
+            </div>
+        </div>
+        <div id="permitsSection" style="display:none; margin-top:40px;">
+            <button class="back-button" onclick="showMainSection()">العودة</button>
+            <div id="permitsList"></div>
+    </div>
+
+    <!-- نافذة تأكيد الحذف -->
+    <div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.18); padding:32px 28px; min-width:320px; text-align:center;">
+            <div style="font-size:1.25em; font-weight:bold; color:#d32f2f; margin-bottom:18px;">
+                هل أنت متأكد من حذف هذا السجل؟
+                <span id="deletePersonName" style="color:#1976d2; font-weight:bold; font-size:1.1em; margin-right:8px;"></span>
+            </div>
+            <div style="display:flex; gap:18px; justify-content:center; margin-top:18px;">
+                <button id="confirmDeleteBtn" style="background:linear-gradient(90deg,#d32f2f 0%,#f44336 100%); color:#fff; font-weight:bold; border:none; border-radius:8px; padding:10px 28px; font-size:1em; cursor:pointer;">تأكيد</button>
+                <button id="cancelDeleteBtn" style="background:linear-gradient(90deg,#232526 0%,#414345 100%); color:#fff; font-weight:bold; border:none; border-radius:8px; padding:10px 28px; font-size:1em; cursor:pointer;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let counter = 1;
+        const STORAGE_KEY = 'tableData';
+        
+        // دالة للحصول على التاريخ مع تخطي يوم الجمعة
+        function getNextDate(date, skipFriday = true) {
+            const nextDate = new Date(date);
+            nextDate.setDate(date.getDate() + 1);
+            
+            if (skipFriday && nextDate.getDay() === 5) { // 5 هو يوم الجمعة
+                nextDate.setDate(nextDate.getDate() + 1);
+            }
+            
+            return nextDate;
+        }
+
+        // دالة لتنسيق التاريخ بالشكل الإنجليزي
+        function formatDate(date, format = 'default') {
+            if (!(date instanceof Date)) {
+                date = new Date(date);
+            }
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            switch(format) {
+                case 'short':
+                    return `${year}-${month}-${day}`;
+                case 'long':
+                    return `${year}-${month}-${day}`;
+                case 'file':
+                    return `${year}${month}${day}`;
+                default:
+                    return `${year}-${month}-${day}`;
+            }
+        }
+
+        // دالة للحصول على تاريخ اليوم والغد
+        function getDates() {
+            const today = new Date();
+            const tomorrow = getNextDate(today);
+            return {
+                today: formatDate(today),
+                tomorrow: formatDate(tomorrow)
+            };
+        }
+
+        // دالة لعرض الإشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            let icon = '';
+            if(type === 'success') icon = '✔️';
+            if(type === 'error') icon = '❌';
+            notification.innerHTML = `<span style='font-size:1.3em; margin-left:10px;'>${icon}</span>${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.classList.add('hide-notification');
+                setTimeout(() => notification.remove(), 600);
+            }, 3000);
+        }
+
+        // دالة إضافة اسم جديد
+        function addName() {
+            const input = document.getElementById('nameInput');
+            const select = document.getElementById('nameSelect');
+            const name = input.value.trim();
+            const rank = select.value;
+            
+            if (!name) {
+                input.focus();
+                return;
+            }
+            
+            const tbody = document.getElementById('namesList');
+            const rows = tbody.getElementsByTagName('tr');
+            let insertIndex = 0;
+                
+            // تحديد موقع الإدراج بناءً على الرتبة
+            for (let i = 0; i < rows.length; i++) {
+                const currentRank = rows[i].cells[2].textContent;
+                if (shouldInsertBefore(rank, currentRank)) {
+                    insertIndex = i;
+                    break;
+                }
+                insertIndex = i + 1;
+            }
+            
+            const row = document.createElement('tr');
+            const dates = getDates();
+                    
+            const statusCell = document.createElement('td');
+            statusCell.innerHTML = `
+                <div class="status-container">
+                    <label class="modern-checkbox mabit">
+                        <input type="checkbox" class="mabit-checkbox">
+                        <span></span>
+                    </label>
+                    <label class="modern-checkbox muqim">
+                        <input type="checkbox" class="muqim-checkbox">
+                        <span></span>
+                    </label>
+                </div>
+            `;
+                    
+            const numberCell = document.createElement('td');
+            numberCell.textContent = insertIndex + 1;
+                    
+            const rankCell = document.createElement('td');
+            rankCell.textContent = rank;
+                    
+            const nameCell = document.createElement('td');
+            nameCell.textContent = name;
+                    
+            // عمود من
+            const fromCell = document.createElement('td');
+            fromCell.innerHTML = '<input type="text" class="from-input" value="1430">';
+                    
+            // عمود إلي
+            const toCell = document.createElement('td');
+            toCell.innerHTML = '<input type="text" class="to-input" value="700">';
+
+            // عمود تاريخ اليوم
+            const todayCell = document.createElement('td');
+            todayCell.innerHTML = `<input type="text" class="date-input" value="${formatDate(new Date())}">`;
+            
+            // عمود تاريخ الغد
+            const tomorrowCell = document.createElement('td');
+            tomorrowCell.innerHTML = `<input type="text" class="date-input" value="${formatDate(getNextDate(new Date()))}">`;
+                    
+            const actionsCell = document.createElement('td');
+            actionsCell.innerHTML = `
+                <button class="icon-btn edit-btn" title="تعديل" onclick="editRow(this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke="#1976d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button class="icon-btn delete-btn" title="حذف" onclick="deleteRow(this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            `;
+                    
+            row.appendChild(statusCell);
+            row.appendChild(numberCell);
+            row.appendChild(rankCell);
+            row.appendChild(nameCell);
+            row.appendChild(fromCell);
+            row.appendChild(toCell);
+            row.appendChild(todayCell);
+            row.appendChild(tomorrowCell);
+            row.appendChild(actionsCell);
+            
+            // إدراج الصف في الموقع المناسب
+            if (insertIndex === 0) {
+                tbody.insertBefore(row, tbody.firstChild);
+            } else if (insertIndex === rows.length) {
+                tbody.appendChild(row);
+            } else {
+                tbody.insertBefore(row, rows[insertIndex]);
+            }
+            
+            // إعادة ترقيم جميع الصفوف
+            reorderNumbers();
+            
+            // حفظ البيانات
+            try {
+                saveTableData();
+                input.value = '';
+                select.value = '';
+                input.focus();
+            } catch (error) {
+                console.error('خطأ في حفظ البيانات:', error);
+            }
+
+            // إضافة سجل
+            addLog('إضافة ضابط', `تم إضافة ${rank} ${name}`);
+
+            // إضافة مستمعي الأحداث للمربعات الجديدة
+            addCheckboxListeners();
+        }
+
+        // دالة إضافة سجل
+        function addLog(action, details) {
+            try {
+                const logs = JSON.parse(localStorage.getItem('actionLogs') || '[]');
+                const logEntry = {
+                    timestamp: new Date().toISOString(),
+                    action: action,
+                    details: details
+                };
+                logs.push(logEntry);
+                localStorage.setItem('actionLogs', JSON.stringify(logs));
+            } catch (error) {
+                console.error('خطأ في إضافة السجل:', error);
+            }
+        }
+
+        // دالة حفظ التعديلات
+        function saveEdit(button) {
+            const row = button.closest('tr');
+            const rankCell = row.cells[2];
+            const nameCell = row.cells[3];
+            const actionsCell = row.cells[8];
+            
+            const newRank = rankCell.querySelector('select').value;
+            const newName = nameCell.querySelector('input').value.trim();
+            
+            if (newName) {
+                const oldRank = rankCell.textContent;
+                const oldName = nameCell.textContent;
+                
+                rankCell.textContent = newRank;
+                nameCell.textContent = newName;
+                
+                // إعادة أزرار الإجراءات
+                actionsCell.innerHTML = `
+                    <button class="icon-btn edit-btn" title="تعديل" onclick="editRow(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke="#1976d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn delete-btn" title="حذف" onclick="deleteRow(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                `;
+
+                // إعادة ترتيب الصفوف حسب الرتبة
+                const tbody = document.getElementById('namesList');
+                const rows = Array.from(tbody.getElementsByTagName('tr'));
+                
+                // إزالة الصف الحالي
+                row.remove();
+                
+                // إيجاد الموقع المناسب للصف الجديد
+                let insertIndex = 0;
+                for (let i = 0; i < rows.length; i++) {
+                    const currentRank = rows[i].cells[2].textContent;
+                    if (shouldInsertBefore(newRank, currentRank)) {
+                        insertIndex = i;
+                        break;
+                    }
+                    insertIndex = i + 1;
+                }
+                
+                // إدراج الصف في الموقع المناسب
+                if (insertIndex === 0) {
+                    tbody.insertBefore(row, tbody.firstChild);
+                } else if (insertIndex === rows.length) {
+                    tbody.appendChild(row);
+                } else {
+                    tbody.insertBefore(row, rows[insertIndex]);
+                }
+                
+                // إعادة ترقيم الصفوف
+                reorderNumbers();
+                
+                saveTableData();
+
+                // إضافة سجل
+                addLog('تعديل بيانات ضابط', `تم تعديل بيانات ${oldRank} ${oldName} إلى ${newRank} ${newName}`);
+                
+                showNotification('تم حفظ التعديلات بنجاح', 'success');
+            }
+        }
+
+        // دالة إلغاء التعديلات
+        function cancelEdit(button, originalRank, originalName) {
+            const row = button.closest('tr');
+            const rankCell = row.cells[2];
+            const nameCell = row.cells[3];
+            const actionsCell = row.cells[8];
+            
+            // إعادة القيم الأصلية
+            rankCell.textContent = originalRank;
+            nameCell.textContent = originalName;
+            
+            // إعادة أزرار الإجراءات
+            actionsCell.innerHTML = `
+                <button class="icon-btn edit-btn" title="تعديل" onclick="editRow(this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke="#1976d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button class="icon-btn delete-btn" title="حذف" onclick="deleteRow(this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            `;
+        }
+
+        // دالة حذف الصف
+        let rowToDelete = null;
+        function deleteRow(button) {
+            rowToDelete = button.closest('tr');
+            var name = rowToDelete.cells[3] ? rowToDelete.cells[3].textContent : '';
+            document.getElementById('deletePersonName').textContent = name ? `(${name})` : '';
+            document.getElementById('deleteModal').style.display = 'flex';
+
+            // إضافة سجل
+            addLog('حذف ضابط', `تم حذف ${rowToDelete.cells[2].textContent} ${rowToDelete.cells[3].textContent}`);
+        }
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            if (rowToDelete) {
+                // حذف من dailyMovementData (المبيت)
+                const rank = rowToDelete.cells[2] ? rowToDelete.cells[2].textContent : '';
+                const name = rowToDelete.cells[3] ? rowToDelete.cells[3].textContent : '';
+                // حذف من dailyMovementData
+                let dailyMovementData = JSON.parse(localStorage.getItem('dailyMovementData') || '[]');
+                dailyMovementData = dailyMovementData.filter(item => !(item.rank === rank && item.name === name));
+                localStorage.setItem('dailyMovementData', JSON.stringify(dailyMovementData));
+                // حذف من attendanceData
+                let attendanceData = JSON.parse(localStorage.getItem('attendanceData') || '[]');
+                attendanceData = attendanceData.filter(item => !(item.rank === rank && item.name === name));
+                localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+                rowToDelete.remove();
+                reorderNumbers();
+                saveTableData();
+                rowToDelete = null;
+            }
+            document.getElementById('deleteModal').style.display = 'none';
+        };
+        document.getElementById('cancelDeleteBtn').onclick = function() {
+            document.getElementById('deleteModal').style.display = 'none';
+            rowToDelete = null;
+        };
+        
+        // دالة حفظ البيانات
+        function saveTableData() {
+            try {
+                const tbody = document.getElementById('namesList');
+                const rows = tbody.getElementsByTagName('tr');
+                const data = [];
+                
+                for (let row of rows) {
+                    data.push({
+                        number: parseInt(row.cells[1].textContent),
+                        rank: row.cells[2].textContent,
+                        name: row.cells[3].textContent,
+                        from: row.cells[4].querySelector('input') ? row.cells[4].querySelector('input').value : '',
+                        to: row.cells[5].querySelector('input') ? row.cells[5].querySelector('input').value : '',
+                        today: row.cells[6].querySelector('input') ? row.cells[6].querySelector('input').value : '',
+                        tomorrow: row.cells[7].querySelector('input') ? row.cells[7].querySelector('input').value : ''
+                    });
+                }
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (error) {
+                console.error('خطأ في حفظ البيانات:', error);
+            }
+        }
+
+        function updateDatesButtonHandler() {
+            const currentDate = new Date();
+            const tomorrow = getNextDate(currentDate);
+            const tbody = document.getElementById('namesList');
+            const rows = tbody.getElementsByTagName('tr');
+            
+            for (let row of rows) {
+                const todayCell = row.cells[6].querySelector('input');
+                const tomorrowCell = row.cells[7].querySelector('input');
+                
+                if (todayCell) {
+                    todayCell.value = formatDate(currentDate);
+                }
+                if (tomorrowCell) {
+                    tomorrowCell.value = formatDate(tomorrow);
+                }
+            }
+            
+            saveTableData();
+            showNotification('تم تحديث التواريخ بنجاح', 'success');
+        }
+
+        // دالة إعادة ترقيم الصفوف
+        function reorderNumbers() {
+            const tbody = document.getElementById('namesList');
+            const rows = tbody.getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[1].textContent = i + 1;
+            }
+            counter = rows.length + 1;
+        }
+
+        // دالة مساعدة لتحديد ترتيب الرتب
+        function getRankOrder(rank) {
+            const rankOrder = {
+                'نقيب': 9,
+                'ملازم أول': 8,
+                'ملازم': 7,
+                'مساعد أول': 6,
+                'مساعد': 5,
+                'رقيب أول': 4,
+                'رقيب': 3,
+                'عريف': 2,
+                'جندي': 1
+            };
+            return rankOrder[rank] || 0;
+        }
+
+        // دالة مساعدة لتحديد ما إذا كان يجب إدراج الرتبة قبل الرتبة الحالية
+        function shouldInsertBefore(newRank, currentRank) {
+            return getRankOrder(newRank) > getRankOrder(currentRank);
+        }
+
+        // تحديث دالة تعديل الصف
+        function editRow(button) {
+            const row = button.closest('tr');
+            const rankCell = row.cells[2];
+            const nameCell = row.cells[3];
+            
+            // حفظ القيم الأصلية
+            const originalRank = rankCell.textContent;
+            const originalName = nameCell.textContent;
+            
+            // تحويل خلية الرتبة إلى حقل اختيار
+            rankCell.innerHTML = `
+                <select class="edit-rank">
+                    <option value="جندي" ${originalRank === 'جندي' ? 'selected' : ''}>جندي</option>
+                    <option value="عريف" ${originalRank === 'عريف' ? 'selected' : ''}>عريف</option>
+                    <option value="رقيب" ${originalRank === 'رقيب' ? 'selected' : ''}>رقيب</option>
+                    <option value="رقيب أول" ${originalRank === 'رقيب أول' ? 'selected' : ''}>رقيب أول</option>
+                    <option value="مساعد" ${originalRank === 'مساعد' ? 'selected' : ''}>مساعد</option>
+                    <option value="مساعد أول" ${originalRank === 'مساعد أول' ? 'selected' : ''}>مساعد أول</option>
+                    <option value="ملازم" ${originalRank === 'ملازم' ? 'selected' : ''}>ملازم</option>
+                    <option value="ملازم أول" ${originalRank === 'ملازم أول' ? 'selected' : ''}>ملازم أول</option>
+                    <option value="نقيب" ${originalRank === 'نقيب' ? 'selected' : ''}>نقيب</option>
+                </select>
+            `;
+            
+            // تحويل خلية الاسم إلى حقل إدخال
+            nameCell.innerHTML = `<input type="text" class="edit-name" value="${originalName}">`;
+            
+            // إضافة أزرار الحفظ والإلغاء
+            const actionsCell = row.cells[8];
+            actionsCell.innerHTML = `
+                <div class="edit-actions">
+                    <button class="save-btn" onclick="saveEdit(this)">حفظ</button>
+                    <button class="cancel-btn" onclick="cancelEdit(this, '${originalRank}', '${originalName}')">إلغاء</button>
+                </div>
+            `;
+            
+            // إضافة مستمعي الأحداث
+            const nameInput = nameCell.querySelector('input');
+            const rankSelect = rankCell.querySelector('select');
+            
+            nameInput.focus();
+            
+            // السماح بالحفظ عند الضغط على Enter
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    saveEdit(actionsCell.querySelector('.save-btn'));
+                }
+            });
+        }
+
+        // دوال عرض الصفحات الفرعية
+        function showDailyMovement() {
+            document.getElementById('mainTitle').style.display = 'none';
+            document.querySelector('.input-group').style.display = 'none';
+            document.querySelector('.top-buttons').style.display = 'none';
+            document.getElementById('namesTable').style.display = 'none';
+            document.getElementById('dailyMovementSection').style.display = 'block';
+            document.getElementById('permitsSection').style.display = 'none';
+            document.getElementById('darkModeToggle').style.display = 'none'; // Hide dark mode button
+            localStorage.setItem('currentPage', 'dailyMovement');
+            loadDailyMovementTable();
+        }
+        function showPermits() {
+            document.getElementById('mainTitle').style.display = 'none';
+            document.querySelector('.input-group').style.display = 'none';
+            document.querySelector('.top-buttons').style.display = 'none';
+            document.getElementById('namesTable').style.display = 'none';
+            document.getElementById('dailyMovementSection').style.display = 'none';
+            document.getElementById('permitsSection').style.display = 'block';
+            document.getElementById('darkModeToggle').style.display = 'none'; // Hide dark mode button
+            localStorage.setItem('currentPage', 'permits');
+            renderPermits();
+        }
+        function showMainSection() {
+            document.getElementById('mainTitle').style.display = '';
+            document.querySelector('.input-group').style.display = '';
+            document.querySelector('.top-buttons').style.display = '';
+            document.getElementById('namesTable').style.display = '';
+            document.getElementById('dailyMovementSection').style.display = 'none';
+            document.getElementById('permitsSection').style.display = 'none';
+            document.getElementById('darkModeToggle').style.display = 'flex'; // Show dark mode button
+            localStorage.setItem('currentPage', 'main');
+        }
+
+        // دالة تصفية واحدة فقط للبحث
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const filter = this.value.trim();
+            const tbody = document.getElementById('namesList');
+            const rows = tbody.getElementsByTagName('tr');
+            for (let row of rows) {
+                let text = row.textContent || row.innerText;
+                if (text.indexOf(filter) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        // دالة إضافة أزرار النسخ الاحتياطي
+        function addBackupButtons() {
+            try {
+                // إنشاء حاوية الأزرار
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = `
+                    display: flex;
+                    gap: 15px;
+                    justify-content: center;
+                    margin: 20px 0;
+                    padding: 0 20px;
+                `;
+
+                // زر النسخ الاحتياطي
+                const backupButton = document.createElement('button');
+                backupButton.className = 'top-button';
+                backupButton.innerHTML = 'نسخ احتياطي';
+                backupButton.onclick = function() {
+                    saveToLocalFile(true);
+                };
+
+                // زر استعادة النسخة الاحتياطية
+                const restoreButton = document.createElement('button');
+                restoreButton.className = 'top-button';
+                restoreButton.innerHTML = 'استعادة النسخة الاحتياطية';
+                restoreButton.onclick = function() {
+                    loadFromLocalFile();
+                };
+
+                // إضافة الأزرار إلى الحاوية
+                buttonContainer.appendChild(backupButton);
+                buttonContainer.appendChild(restoreButton);
+
+                // إضافة الحاوية بعد الجدول
+                const tableContainer = document.querySelector('.table-container');
+                if (tableContainer) {
+                    tableContainer.parentNode.insertBefore(buttonContainer, tableContainer.nextSibling);
+                }
+            } catch (error) {
+                console.error('خطأ في إضافة أزرار النسخ الاحتياطي:', error);
+                showNotification('حدث خطأ في إضافة أزرار النسخ الاحتياطي', 'error');
+            }
+        }
+
+        // Consolidate all window load event listeners
+        window.addEventListener('load', function() {
+            const currentPage = localStorage.getItem('currentPage') || 'main';
+            loadMainTableData();
+            loadMabitStates();
+            addCheckboxListeners();
+            // إخفاء جميع الأقسام أولاً
+            document.querySelector('.input-group').style.display = 'none';
+            document.querySelector('.top-buttons').style.display = 'none';
+            document.getElementById('namesTable').style.display = 'none';
+            document.getElementById('dailyMovementSection').style.display = 'none';
+            document.getElementById('permitsSection').style.display = 'none';
+            document.getElementById('mainTitle').style.display = 'none';
+            // عرض القسم المناسب
+            switch(currentPage) {
+                case 'dailyMovement':
+                    document.getElementById('dailyMovementSection').style.display = 'block';
+                    loadDailyMovementTable();
+                    break;
+                case 'permits':
+                    document.getElementById('permitsSection').style.display = 'block';
+                    renderPermits();
+                    break;
+                default:
+                    document.querySelector('.input-group').style.display = '';
+                    document.querySelector('.top-buttons').style.display = '';
+                    document.getElementById('namesTable').style.display = '';
+                    document.getElementById('mainTitle').style.display = '';
+            }
+            
+            // إضافة مستمعي الأحداث
+            document.getElementById('nameInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addName();
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const searchText = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#mainTable tbody tr');
+                
+                rows.forEach(row => {
+                    const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const rank = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                    if (name.includes(searchText) || rank.includes(searchText)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // حفظ واستعادة حالة مربعات مبيت
+            saveMabitStates();
+            loadMabitStates();
+        });
+
+        function isValidData(data) {
+            if (!data) return false;
+            
+            // Check if data has required properties
+            if (!data.tableData || !Array.isArray(data.tableData)) return false;
+            
+            // Validate table data structure
+            for (const row of data.tableData) {
+                if (!row.rank || !row.name) return false;
+            }
+            
+            return true;
+        }
+
+        // دالة حفظ البيانات في ملف محلي
+        function saveToLocalFile(shouldDownload = false) {
+            try {
+                const data = {
+                    tableData: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+                };
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                if (shouldDownload) {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `backup_${formatDate(new Date(), 'file')}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showNotification('تم حفظ النسخة الاحتياطية بنجاح', 'success');
+                }
+            } catch (error) {
+                console.error('خطأ في حفظ النسخة الاحتياطية:', error);
+                showNotification('حدث خطأ في حفظ النسخة الاحتياطية', 'error');
+            }
+        }
+
+        // دالة استعادة البيانات من ملف محلي
+        function loadFromLocalFile() {
+            try {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            
+                            if (data.tableData && Array.isArray(data.tableData)) {
+                                localStorage.setItem(STORAGE_KEY, JSON.stringify(data.tableData));
+                                loadTableData();
+                                showNotification('تم استعادة النسخة الاحتياطية بنجاح', 'success');
+                            } else {
+                                showNotification('الملف غير صالح', 'error');
+                            }
+                        } catch (error) {
+                            console.error('خطأ في قراءة الملف:', error);
+                            showNotification('حدث خطأ في قراءة الملف', 'error');
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        showNotification('حدث خطأ في قراءة الملف', 'error');
+                    };
+                    
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            } catch (error) {
+                console.error('خطأ في استعادة النسخة الاحتياطية:', error);
+                showNotification('حدث خطأ في استعادة النسخة الاحتياطية', 'error');
+            }
+        }
+
+        // دالة حفظ حالة المربعات
+        function saveCheckboxStates() {
+            const states = [];
+            const rows = document.querySelectorAll('#namesList tr');
+            rows.forEach(row => {
+                const mabitCheckbox = row.querySelector('.mabit-checkbox');
+                const muqimCheckbox = row.querySelector('.muqim-checkbox');
+                const rank = row.cells[2].textContent;
+                const name = row.cells[3].textContent;
+                states.push({
+                    rank: rank,
+                    name: name,
+                    mabit: mabitCheckbox ? mabitCheckbox.checked : false,
+                    muqim: muqimCheckbox ? muqimCheckbox.checked : false
+                });
+            });
+            localStorage.setItem('checkboxStates', JSON.stringify(states));
+        }
+
+        // دالة تحميل حالة المربعات
+        function loadCheckboxStates() {
+            let states = JSON.parse(localStorage.getItem('checkboxStates') || '[]');
+            // دعم البنية القديمة (object) وتحويلها لمصفوفة
+            if (!Array.isArray(states)) {
+                states = Object.values(states);
+            }
+            const rows = document.querySelectorAll('#namesList tr');
+            rows.forEach(row => {
+                const mabitCheckbox = row.querySelector('.mabit-checkbox');
+                const muqimCheckbox = row.querySelector('.muqim-checkbox');
+                const rank = row.cells[2].textContent;
+                const name = row.cells[3].textContent;
+                const found = states.find(s => s.rank === rank && s.name === name);
+                if (found) {
+                    if (mabitCheckbox) mabitCheckbox.checked = found.mabit;
+                    if (muqimCheckbox) muqimCheckbox.checked = found.muqim;
+                }
+            });
+        }
+
+        // عرض بيانات يومية السير من localStorage
+        function loadDailyMovementTable() {
+            const DAILY_MOVEMENT_KEY = 'dailyMovementData';
+            let data = JSON.parse(localStorage.getItem(DAILY_MOVEMENT_KEY) || '[]');
+            // مزامنة مع الجدول الرئيسي: حذف أي شخص غير موجود في STORAGE_KEY
+            const mainData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            data = data.filter(item => mainData.some(main => main.rank === item.rank && main.name === item.name));
+            localStorage.setItem(DAILY_MOVEMENT_KEY, JSON.stringify(data));
+            // ترتيب البيانات حسب الرتبة
+            data.sort((a, b) => {
+                const rankOrder = {
+                    'نقيب': 9,
+                    'ملازم أول': 8,
+                    'ملازم': 7,
+                    'مساعد أول': 6,
+                    'مساعد': 5,
+                    'رقيب أول': 4,
+                    'رقيب': 3,
+                    'عريف': 2,
+                    'جندي': 1
+                };
+                return rankOrder[b.rank] - rankOrder[a.rank];
+            });
+
+            const tbody = document.getElementById('dailyMovementList');
+            tbody.innerHTML = '';
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                // م
+                const numberCell = document.createElement('td');
+                numberCell.textContent = index + 1;
+                // الرتبة
+                const rankCell = document.createElement('td');
+                rankCell.textContent = item.rank;
+                // الاسم
+                const nameCell = document.createElement('td');
+                nameCell.textContent = item.name;
+                // من سعت
+                const fromCell = document.createElement('td');
+                fromCell.innerHTML = `<span>${item.from}</span>`;
+                // من يوم
+                const fromDayCell = document.createElement('td');
+                fromDayCell.innerHTML = `<span>${item.today}</span>`;
+                // إلي سعت
+                const toCell = document.createElement('td');
+                toCell.innerHTML = `<span>${item.to}</span>`;
+                // إلي يوم
+                const toDayCell = document.createElement('td');
+                toDayCell.innerHTML = `<span>${item.tomorrow}</span>`;
+                row.appendChild(numberCell);
+                row.appendChild(rankCell);
+                row.appendChild(nameCell);
+                row.appendChild(fromCell);
+                row.appendChild(fromDayCell);
+                row.appendChild(toCell);
+                row.appendChild(toDayCell);
+                tbody.appendChild(row);
+            });
+        }
+
+        // إضافة مستمعي الأحداث
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addName();
+            }
+        });
+
+        function searchTable() {
+            const searchInput = document.getElementById('searchInput');
+            const searchType = document.getElementById('searchType').value;
+            const searchText = searchInput.value.trim().toLowerCase();
+            const table = document.getElementById('namesTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const rankCell = row.cells[2].textContent.toLowerCase();
+                const nameCell = row.cells[3].textContent.toLowerCase();
+                let showRow = false;
+
+                switch(searchType) {
+                    case 'rank':
+                        showRow = rankCell.includes(searchText);
+                        break;
+                    case 'name':
+                        showRow = nameCell.includes(searchText);
+                        break;
+                    case 'all':
+                    default:
+                        showRow = rankCell.includes(searchText) || nameCell.includes(searchText);
+                        break;
+                }
+
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        // تحديث وظيفة البحث عند تغيير نوع البحث
+        document.getElementById('searchType').addEventListener('change', searchTable);
+
+        // حفظ واستعادة حالة مربعات مبيت
+        function saveMabitStates() {
+            const states = [];
+            const rows = document.querySelectorAll('#namesList tr');
+            rows.forEach(row => {
+                const mabitCheckbox = row.querySelector('.mabit-checkbox');
+                const rank = row.cells[2].textContent;
+                const name = row.cells[3].textContent;
+                states.push({
+                    rank: rank,
+                    name: name,
+                    checked: mabitCheckbox ? mabitCheckbox.checked : false
+                });
+            });
+            localStorage.setItem('mabitStates', JSON.stringify(states));
+        }
+
+        function loadMabitStates() {
+            let states = JSON.parse(localStorage.getItem('mabitStates') || '[]');
+            if (!Array.isArray(states)) states = [];
+            const rows = document.querySelectorAll('#namesList tr');
+            rows.forEach(row => {
+                const mabitCheckbox = row.querySelector('.mabit-checkbox');
+                const rank = row.cells[2].textContent;
+                const name = row.cells[3].textContent;
+                const found = states.find(s => s.rank === rank && s.name === name);
+                if (mabitCheckbox && found) {
+                    mabitCheckbox.checked = found.checked;
+                }
+            });
+        }
+
+        // تحديث دالة إضافة مستمعي الأحداث للمربعات
+        function addCheckboxListeners() {
+            const rows = document.querySelectorAll('#namesList tr');
+            rows.forEach(row => {
+                const mabitCheckbox = row.querySelector('.mabit-checkbox');
+                const muqimCheckbox = row.querySelector('.muqim-checkbox');
+
+                if (mabitCheckbox) {
+                    mabitCheckbox.addEventListener('change', function() {
+                        saveMabitStates();
+                        const rank = row.cells[2].textContent;
+                        const name = row.cells[3].textContent;
+                        const from = row.cells[4].querySelector('input') ? row.cells[4].querySelector('input').value : '';
+                        const to = row.cells[5].querySelector('input') ? row.cells[5].querySelector('input').value : '';
+                        const today = row.cells[6].querySelector('input') ? row.cells[6].querySelector('input').value : '';
+                        const tomorrow = row.cells[7].querySelector('input') ? row.cells[7].querySelector('input').value : '';
+                        const DAILY_MOVEMENT_KEY = 'dailyMovementData';
+                        let dailyMovementData = JSON.parse(localStorage.getItem(DAILY_MOVEMENT_KEY) || '[]');
+                        if (this.checked) {
+                            // إضافة السجل إذا لم يكن موجودًا
+                            if (!dailyMovementData.some(item => item.rank === rank && item.name === name)) {
+                                dailyMovementData.push({
+                                    rank: rank,
+                                    name: name,
+                                    from: from,
+                                    to: to,
+                                    today: today,
+                                    tomorrow: tomorrow
+                                });
+                                localStorage.setItem(DAILY_MOVEMENT_KEY, JSON.stringify(dailyMovementData));
+                            }
+                        } else {
+                            // حذف السجل إذا كان موجودًا
+                            dailyMovementData = dailyMovementData.filter(item => !(item.rank === rank && item.name === name));
+                            localStorage.setItem(DAILY_MOVEMENT_KEY, JSON.stringify(dailyMovementData));
+                        }
+                    });
+                }
+                if (muqimCheckbox) {
+                    muqimCheckbox.addEventListener('change', function() {
+                        saveCheckboxStates();
+                        const rank = row.cells[2].textContent;
+                        const name = row.cells[3].textContent;
+                        const ATTENDANCE_STORAGE_KEY = 'attendanceData';
+                        let attendanceData = JSON.parse(localStorage.getItem(ATTENDANCE_STORAGE_KEY) || '[]');
+                        if (this.checked) {
+                            // إضافة السجل إذا لم يكن موجودًا
+                            if (!attendanceData.some(item => item.rank === rank && item.name === name)) {
+                                attendanceData.push({
+                                    rank: rank,
+                                    name: name,
+                                    shift: '',
+                                    date: new Date().toISOString().slice(0, 10)
+                                });
+                                localStorage.setItem(ATTENDANCE_STORAGE_KEY, JSON.stringify(attendanceData));
+                            }
+                        } else {
+                            // حذف السجل إذا كان موجودًا
+                            attendanceData = attendanceData.filter(item => !(item.rank === rank && item.name === name));
+                            localStorage.setItem(ATTENDANCE_STORAGE_KEY, JSON.stringify(attendanceData));
+                        }
+                    });
+                }
+            });
+        }
+
+        // تحميل حالة مربعات مبيت عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            loadMabitStates();
+        });
+
+        function loadMainTableData() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            const tbody = document.getElementById('namesList');
+            tbody.innerHTML = '';
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.sort((a, b) => getRankOrder(b.rank) - getRankOrder(a.rank));
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    // الحالة
+                    const statusCell = document.createElement('td');
+                    statusCell.innerHTML = `
+                        <div class="status-container">
+                            <label class="modern-checkbox mabit">
+                                <input type="checkbox" class="mabit-checkbox">
+                                <span></span>
+                            </label>
+                            <label class="modern-checkbox muqim">
+                                <input type="checkbox" class="muqim-checkbox">
+                                <span></span>
+                            </label>
+                        </div>
+                    `;
+                    // م
+                    const numberCell = document.createElement('td');
+                    numberCell.textContent = index + 1;
+                    // الرتبة
+                    const rankCell = document.createElement('td');
+                    rankCell.textContent = item.rank;
+                    // الاسم
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = item.name;
+                    // من سعت
+                    const fromCell = document.createElement('td');
+                    fromCell.innerHTML = `<input type="text" class="from-input" value="${item.from || '700'}">`;
+                    // إلي سعت
+                    const toCell = document.createElement('td');
+                    toCell.innerHTML = `<input type="text" class="to-input" value="${item.to || '1430'}">`;
+                    // تاريخ اليوم
+                    const todayCell = document.createElement('td');
+                    todayCell.innerHTML = `<input type="text" class="date-input" value="${item.today || formatDate(new Date())}">`;
+                    // تاريخ الغد
+                    const tomorrowCell = document.createElement('td');
+                    tomorrowCell.innerHTML = `<input type="text" class="date-input" value="${item.tomorrow || formatDate(getNextDate(new Date()))}">`;
+                    // الإجراءات
+                    const actionsCell = document.createElement('td');
+                    actionsCell.innerHTML = `
+                        <button class="icon-btn edit-btn" title="تعديل" onclick="editRow(this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke="#1976d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="icon-btn delete-btn" title="حذف" onclick="deleteRow(this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    `;
+                    row.appendChild(statusCell);
+                    row.appendChild(numberCell);
+                    row.appendChild(rankCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(fromCell);
+                    row.appendChild(toCell);
+                    row.appendChild(todayCell);
+                    row.appendChild(tomorrowCell);
+                    row.appendChild(actionsCell);
+                    tbody.appendChild(row);
+                });
+                addCheckboxListeners();
+                loadMabitStates();
+                loadCheckboxStates();
+            }
+        }
+
+        // دالة لعرض تصاريح الغياب للأشخاص في يومية السير
+        function renderPermits() {
+            const DAILY_MOVEMENT_KEY = 'dailyMovementData';
+            const data = JSON.parse(localStorage.getItem(DAILY_MOVEMENT_KEY) || '[]');
+            const permitsList = document.getElementById('permitsList');
+            if (!permitsList) return;
+            if (data.length === 0) {
+                permitsList.innerHTML = '<div style="text-align:center; color:#888; font-size:1.2em; margin-top:30px;">لا يوجد بيانات في يومية السير</div>';
+                return;
+            }
+            let html = '<div class="permits-flex-container" style="display:flex; flex-wrap:wrap; gap:24px; justify-content:center; align-items:flex-start;">';
+            // ترتيب التصاريح حسب الرتبة من الأعلى إلى الأقل
+            const rankOrder = {
+                'نقيب': 9,
+                'ملازم أول': 8,
+                'ملازم': 7,
+                'مساعد أول': 6,
+                'مساعد': 5,
+                'رقيب أول': 4,
+                'رقيب': 3,
+                'عريف': 2,
+                'جندي': 1
+            };
+            data.sort((a, b) => (rankOrder[b.rank] || 0) - (rankOrder[a.rank] || 0));
+            data.forEach((item) => {
+                html += `
+                <div class='permit-box' style="border:5px solid #000; border-radius:0; padding:0 18px 18px 18px; width:340px; min-height:160px; background:#fff; position:relative; margin-bottom:24px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; font-family:'Cairo','Tajawal',Arial,sans-serif; min-width:340px; max-width:98vw;">
+                    <div>
+                        <div class='permit-title' style="text-align:center; font-size:1.1em; font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif; border:5px solid #000; border-radius:4px 4px 0 0; padding:4px 0 4px 0; margin-top:0; margin-bottom:10px; width:100%; margin-right:auto; margin-left:auto; background:#fff;">تصريح غياب</div>
+                        <div style='text-align:center; font-size:0.98em; color:#000; margin-bottom:5px; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif;'>المنطقة المركزية العسكرية</div>
+                        <div class='permit-content' style="font-size:0.95em; line-height:1.7; color:#000; margin-bottom:10px; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif;">
+                            <div style="color:#000; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif;"><span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">الوحدة / </span> مركز الإمداد الآلي أ.ذ</div>
+                            <div style="color:#000; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif;"><span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">الدرجة / </span> ${item.rank}</div>
+                            <div style="color:#000; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif;"><span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">الاسم / </span> ${item.name}</div>
+                            <div style='margin: 14px 0; color:#000; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif; text-align:center; width:100%;'>
+                              <span style="display:inline-block; text-align:center; width:100%; font-size:1.08em;">يصرح للمذكور بالغياب عن الوحدة</span>
+                            </div>
+                            من سعت <span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">${toArabicNumber(item.from)}</span> من يوم <span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">${formatArabicDate(item.today)}</span><br>
+                            إلى سعت <span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">${toArabicNumber(item.to)}</span> إلي يوم <span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">${formatArabicDate(item.tomorrow)}</span>
+                        </div>
+                        <div style="text-align:center; color:#000; font-weight:bold; font-family:'Cairo','Tajawal',Arial,sans-serif; margin-bottom:8px;">حيث أنه <span class='permit-label' style="font-weight:bold; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">إجازة / مأمورية</span></div>
+                    </div>
+                    <div class='permit-footer' style="margin-top:10px; text-align:right; font-family:'Cairo','Tajawal',Arial,sans-serif;">
+                        <div class='permit-sign' style="font-size:0.95em; font-weight:bold; margin-top:10px; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">التوقيع / </div>
+                        <div class='permit-sign' style="font-size:0.95em; font-weight:bold; margin-top:10px; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">عميـــــــــــــد / أحمد محمد جمــيل التهامـي</div>
+                        <div class='permit-sign' style="font-size:0.95em; font-weight:bold; margin-top:10px; color:#000; font-family:'Cairo','Tajawal',Arial,sans-serif;">قــــــــائــــــــــد مركـــــــــــز الإمــــــــــداد الآلـــــــــــــــــي</div>
+                    </div>
+                </div>
+                `;
+            });
+            html += '</div>';
+            permitsList.innerHTML = html;
+        }
+
+        // دالة طباعة تصريح رسمي
+        function printPermit(rank, name, from, fromDay, to, toDay) {
+            rank = decodeURIComponent(rank);
+            name = decodeURIComponent(name);
+            from = decodeURIComponent(from);
+            fromDay = decodeURIComponent(fromDay);
+            to = decodeURIComponent(to);
+            toDay = decodeURIComponent(toDay);
+            const win = window.open('', '', 'width=700,height=900');
+            win.document.write(`
+                <html lang='ar' dir='rtl'>
+                <head>
+                    <title>تصريح غياب</title>
+                    <style>
+                        body { font-family: 'Tajawal', Arial, sans-serif; background: #fff; margin: 0; padding: 0; }
+                        .permit-box { border: 2px solid #222; border-radius: 18px; padding: 38px 32px; width: 95%; max-width: 500px; margin: 40px auto; background: #fff; position: relative; }
+                        .permit-title { text-align: center; font-size: 1.7em; font-weight: bold; margin-bottom: 18px; }
+                        .permit-content { font-size: 1.2em; line-height: 2.1; color: #222; margin-bottom: 18px; }
+                        .permit-label { font-weight: bold; color: #1976d2; }
+                        .permit-footer { margin-top: 40px; text-align: left; }
+                        .permit-sign { font-size: 1.1em; font-weight: bold; margin-top: 18px; }
+                        .permit-stamp { position: absolute; left: 30px; bottom: 30px; color: #1976d2; opacity: 0.25; font-size: 2.5em; transform: rotate(-15deg); }
+                        @media print { .permit-stamp { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    <div class='permit-box'>
+                        <div class='permit-title'>تصريح غياب</div>
+                        <div class='permit-content'>
+                            <div style='margin: 18px 0;text-align:center;'>المنطقه المركزية العسكرية<br>
+                            <div><span class='permit-label'>الوحدة / </span> مركز الإمداد الآلي أ.ذ</div>
+                            <div><span class='permit-label'>الدرجة / </span> ${rank}</div>
+                            <div><span class='permit-label'>الاسم / </span> ${name}</div>
+                            <div style='margin: 18px 0;text-align:center;'>يصرح للمذكور بالغياب عن الوحدة<br>
+                            من سعت <span class='permit-label'>${toArabicNumber(from)}</span> من يوم <span class='permit-label'>${formatArabicDate(today)}</span><br>
+                            إلى سعت <span class='permit-label'>${toArabicNumber(to)}</span> من يوم<span class='permit-label'>${formatArabicDate(tomorrow)}</span></div>
+                            <div>حيث أنه <span class='permit-label'>إجازة / مأمورية</span></div>
+                        </div>
+                        <div class='permit-footer'>
+                            <div class='permit-sign'>التوقيع/ (________________________)</div>
+                            <div class='permit-sign'>عميــد / أحمد محمد جمــيل التهامـي</div>
+                            <div class='permit-sign'>قائــد مركـــز الإمــــداد الآلــــي</div>
+                        </div>
+                    </div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+
+        // دالة لتنسيق التاريخ إلى العربي (12 مايو 2025)
+        function formatArabicDate(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            const year = toArabicNumber(parts[0]);
+            const month = toArabicNumber(parseInt(parts[1], 10));
+            const day = toArabicNumber(parseInt(parts[2], 10));
+            return `${year}/${month}/${day}`;
+        }
+
+        // دالة لتحويل الأرقام الإنجليزية إلى أرقام عربية
+        function toArabicNumber(str) {
+            return String(str).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+        }
+
+        // DARK MODE
+        function setDarkMode(enabled) {
+            const icon = document.getElementById('darkModeIcon');
+            if (enabled) {
+                document.body.classList.add('dark-mode');
+                icon.textContent = '☀️';
+                icon.style.transform = 'rotate(360deg)';
+                document.getElementById('darkModeToggle').setAttribute('aria-label', 'تبديل إلى الوضع الفاتح');
+            } else {
+                document.body.classList.remove('dark-mode');
+                icon.textContent = '🌙';
+                icon.style.transform = 'rotate(-360deg)';
+                document.getElementById('darkModeToggle').setAttribute('aria-label', 'تبديل إلى الوضع الداكن');
+            }
+            setTimeout(()=>{icon.style.transform = 'rotate(0deg)';}, 400);
+            localStorage.setItem('darkMode', enabled ? '1' : '0');
+        }
+        document.getElementById('darkModeToggle').onclick = function() {
+            setDarkMode(!document.body.classList.contains('dark-mode'));
+        };
+        // Tooltip نصي (للوصولية)
+        if (!document.getElementById('darkModeToggle').querySelector('.tooltip')) {
+          const tooltip = document.createElement('span');
+          tooltip.className = 'tooltip';
+          tooltip.textContent = 'تبديل الوضع الليلي/النهاري';
+          document.getElementById('darkModeToggle').appendChild(tooltip);
+        }
+        // عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', function() {
+            const dark = localStorage.getItem('darkMode') === '1';
+            setDarkMode(dark);
+        });
+
+        // مزامنة بيانات attendanceData مع الجدول الرئيسي
+        function syncAttendanceData() {
+            const ATTENDANCE_STORAGE_KEY = 'attendanceData';
+            let data = JSON.parse(localStorage.getItem(ATTENDANCE_STORAGE_KEY) || '[]');
+            const mainData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            data = data.filter(item => mainData.some(main => main.rank === item.rank && main.name === item.name));
+            localStorage.setItem(ATTENDANCE_STORAGE_KEY, JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>

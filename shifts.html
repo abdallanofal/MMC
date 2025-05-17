@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الورديات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0f4f8 100%) !important;
+            font-family: 'Tajawal', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 2000px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 28px;
+            box-shadow: 0 8px 32px rgba(25,118,210,0.13), 0 1.5px 8px rgba(0,0,0,0.07);
+            padding: 38px 32px 32px 32px;
+            border: 1.5px solid #e3e8f0;
+            transition: box-shadow 0.3s, border-radius 0.3s;
+        }
+        body, .container, .shift-form, .shifts-table th, .shifts-table td, input, select, button {
+            font-size: 1.18em !important;
+        }
+        .page-title {
+            text-align: center;
+            color: #1976d2;
+            font-size: 2.7em;
+            font-weight: bold;
+            margin-bottom: 36px;
+            letter-spacing: 1.2px;
+            background: linear-gradient(90deg, #1976d2 10%, #5b86e5 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 18px rgba(91,134,229,0.10);
+            transition: font-size 0.3s, text-shadow 0.3s;
+        }
+        .shift-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 30px;
+            align-items: flex-end;
+        }
+        .shift-form label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .shift-form input, .shift-form select {
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1.5px solid #d1d9e6;
+            font-size: 1.13em;
+            font-family: 'Tajawal', Arial, sans-serif;
+            background: #f8fafd;
+            box-shadow: 0 2px 8px rgba(91,134,229,0.07);
+            margin-bottom: 8px;
+            transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .shift-form input:hover, .shift-form select:hover {
+            background: linear-gradient(90deg, #f8fafd 80%, #eaf1fb 100%);
+            box-shadow: 0 2px 12px rgba(91,134,229,0.10);
+        }
+        .shift-form input:focus, .shift-form select:focus {
+            box-shadow: 0 0 0 4px rgba(91,134,229,0.18);
+            border: 2px solid #1976d2;
+        }
+        .shift-form .days-checkboxes {
+            display: flex;
+            gap: 4px;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            margin-top: 6px;
+            margin-bottom: 8px;
+            overflow-x: unset !important;
+        }
+        .shift-form .days-checkboxes label {
+            font-size: 0.93em;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            padding: 6px 14px 6px 14px;
+            margin: 0 5px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f6fb;
+            border-radius: 18px;
+            border: 1.2px solid #e3e8f0;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s, color 0.2s;
+            box-shadow: 0 1px 4px rgba(91,134,229,0.06);
+            position: relative;
+        }
+        .shift-form .days-checkboxes input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: #1976d2;
+            margin-left: 6px;
+            vertical-align: middle;
+            cursor: pointer;
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            opacity: 0;
+        }
+        .shift-form .days-checkboxes input[type="checkbox"]:checked + span,
+        .shift-form .days-checkboxes label:has(input[type="checkbox"]:checked),
+        .shift-form .days-checkboxes label:hover,
+        .shift-form .days-checkboxes label:focus-within {
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: #fff;
+            border: 1.5px solid #232526;
+            transition: background 0.2s, color 0.2s;
+        }
+        .shift-form .days-checkboxes label span {
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 1.08em;
+        }
+        .shift-form button, .back-btn, .top-button {
+            padding: 14px 36px !important;
+            border-radius: 18px !important;
+            background: linear-gradient(90deg, #232526 0%, #414345 100%) !important;
+            color: #fff !important;
+            font-weight: bold !important;
+            border: none !important;
+            font-size: 1.18em !important;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(25,118,210,0.08);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+        .shift-form button:hover, .back-btn:hover, .top-button:hover {
+            background: linear-gradient(90deg, #414345 0%, #232526 100%) !important;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 24px rgba(25,118,210,0.13);
+        }
+        .shift-form button:active, .back-btn:active, .top-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(25,118,210,0.10) inset;
+        }
+        .shifts-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 28px;
+            background: #fff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(91,134,229,0.10);
+            font-size: 1.13em;
+            transition: box-shadow 0.3s;
+        }
+        .shifts-table th {
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.15em;
+            letter-spacing: 1px;
+            border: none;
+            padding: 16px 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(91,134,229,0.08);
+        }
+        .shifts-table td {
+            background: #f5f6fa;
+            color: #232526;
+            border: none;
+            padding: 14px 10px;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+        .shifts-table tbody tr:hover td {
+            background: rgba(220, 230, 245, 0.7) !important;
+            color: #232526 !important;
+            box-shadow: 0 4px 16px rgba(91,134,229,0.07);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .shifts-table th:first-child {
+            border-top-right-radius: 22px;
+        }
+        .shifts-table th:last-child {
+            border-top-left-radius: 22px;
+        }
+        .shifts-table tr:last-child td:first-child {
+            border-bottom-right-radius: 22px;
+        }
+        .shifts-table tr:last-child td:last-child {
+            border-bottom-left-radius: 22px;
+        }
+        .action-btn {
+            padding: 5px 14px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 2px;
+        }
+        .edit-btn { background: #e3f2fd; color: #1976d2; }
+        .delete-btn { background: #ffebee; color: #d32f2f; }
+        .back-btn {
+            margin-bottom: 18px;
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 22px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 6px;
+            margin: 0 2px;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+        .icon-btn:hover {
+            background: #eaf1fb;
+            box-shadow: 0 4px 16px rgba(91,134,229,0.13);
+        }
+        .icon-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 1px 4px rgba(25,118,210,0.10) inset;
+        }
+        .icon-btn.edit-btn:hover {
+            background: #e3f2fd;
+        }
+        .icon-btn.delete-btn:hover {
+            background: #ffebee;
+        }
+        .icon-btn svg {
+            width: 34px !important;
+            height: 34px !important;
+            min-width: 34px !important;
+            min-height: 34px !important;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .icon-btn {
+            width: 44px !important;
+            height: 44px !important;
+            min-width: 44px !important;
+            min-height: 44px !important;
+            margin: 0 6px !important;
+            justify-content: center;
+            align-items: center;
+            display: inline-flex;
+        }
+        .icon-btn:hover svg {
+            transform: scale(1.1);
+        }
+        .icon-btn.edit-btn svg path {
+            stroke: #1976d2;
+            transition: all 0.3s ease;
+        }
+        .icon-btn.delete-btn svg path {
+            stroke: #d32f2f;
+            transition: all 0.3s ease;
+        }
+        .icon-btn.edit-btn:hover svg path {
+            stroke: #1976d2;
+            stroke-width: 2.5;
+        }
+        .icon-btn.delete-btn:hover svg path {
+            stroke: #d32f2f;
+            stroke-width: 2.5;
+        }
+        /* تحسين شكل الـ scrollbar */
+        ::-webkit-scrollbar {
+            height: 10px;
+            width: 10px;
+            background: #eaf1fb;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #b3c6e7 0%, #5b86e5 100%);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1976d2;
+        }
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+            .shifts-table, .shifts-table * {
+                visibility: visible !important;
+            }
+            .shifts-table {
+                position: absolute !important;
+                left: 0;
+                top: 0;
+                width: 100vw !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: #fff !important;
+            }
+        }
+        .shift-form input[type="date"] {
+            border-radius: 14px;
+            border: 1.5px solid #d1d9e6;
+            background: #f8fafd;
+            box-shadow: 0 2px 8px rgba(91,134,229,0.07);
+            padding: 12px 16px;
+            font-size: 1.08em;
+            color: #232526;
+            transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+        .shift-form input[type="date"]:focus {
+            border: 2px solid #7b2ff2;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(123,47,242,0.13);
+        }
+        .shift-form input[type="date"]::-webkit-input-placeholder {
+            color: #b3b3b3;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+        }
+        .shift-form input[type="date"]::placeholder {
+            color: #b3b3b3;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="window.location.href='index.html'">العودة للرئيسية</button>
+        <div class="page-title">إدارة الورديات</div>
+        <form class="shift-form" id="shiftForm" onsubmit="addOrUpdateShift(event)">
+            <div style="display:flex; gap:40px; flex:2; min-width:0; margin-bottom:18px; align-items: flex-start;">
+                <div style="flex:1 1 0; min-width:0; display: flex; flex-direction: column; gap: 0;">
+                    <label>اسم الشخص</label>
+                    <input type="text" id="personName" required style="width:100%; min-width:0;">
+                    <div style="margin-top: 8px;">
+                        <label style="font-weight:bold; color:#333; margin-bottom:4px; display:block;">أيام الأسبوع</label>
+                        <div class="days-checkboxes">
+                            <label><input type="checkbox" value="السبت"><span>سبت</span></label>
+                            <label><input type="checkbox" value="الأحد"><span>أحد</span></label>
+                            <label><input type="checkbox" value="الاثنين"><span>اثنين</span></label>
+                            <label><input type="checkbox" value="الثلاثاء"><span>ثلاثاء</span></label>
+                            <label><input type="checkbox" value="الأربعاء"><span>أربعاء</span></label>
+                            <label><input type="checkbox" value="الخميس"><span>خميس</span></label>
+                            <label><input type="checkbox" value="الجمعة"><span>جمعة</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div style="flex:1 1 0; min-width:0; display: flex; flex-direction: column; justify-content: flex-start;">
+                    <label>اسم الوردية</label>
+                    <input type="text" id="shiftName" required style="width:100%; min-width:0;">
+                </div>
+                <div style="flex:1 1 0; min-width:0; display: flex; flex-direction: column; justify-content: flex-start;">
+                    <label>ملاحظات</label>
+                    <input type="text" id="notes" style="width:100%; min-width:0;">
+                </div>
+            </div>
+            <div style="display:flex; gap:14px; margin-top:10px;">
+                <div style="flex:1; min-width:100px;">
+                    <label>تاريخ البدء</label><br>
+                    <input type="date" id="startDate" required placeholder="dd/mm/yyyy">
+                </div>
+                <div style="flex:1; min-width:100px;">
+                    <label>تاريخ الانتهاء</label><br>
+                    <input type="date" id="endDate" required placeholder="dd/mm/yyyy">
+                </div>
+            </div>
+            <div>
+                <button type="submit" id="submitBtn">إضافة وردية</button>
+            </div>
+            <input type="hidden" id="editIndex">
+        </form>
+        <table class="shifts-table" id="shiftsTable" style="margin-top:32px;">
+            <thead>
+                <tr>
+                    <th>اسم الشخص</th>
+                    <th>اسم الوردية</th>
+                    <th>تاريخ البدء</th>
+                    <th>تاريخ الانتهاء</th>
+                    <th>أيام الأسبوع</th>
+                    <th>ملاحظات</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="shiftsList"></tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <script>
+        function getShifts() {
+            return JSON.parse(localStorage.getItem('shiftsData') || '[]');
+        }
+        function saveShifts(data) {
+            localStorage.setItem('shiftsData', JSON.stringify(data));
+        }
+        function renderShifts() {
+            const shifts = getShifts();
+            const tbody = document.getElementById('shiftsList');
+            tbody.innerHTML = '';
+            shifts.forEach((shift, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${shift.personName || ''}</td>
+                    <td>${shift.name}</td>
+                    <td>${shift.startDate || ''}</td>
+                    <td>${shift.endDate || ''}</td>
+                    <td>${shift.days && shift.days.length ? shift.days.join('، ') : '-'}</td>
+                    <td>${shift.notes || ''}</td>
+                    <td>
+                        <button class="icon-btn edit-btn" title="تعديل" onclick="editShift(${idx})">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke="#1976d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="icon-btn delete-btn" title="حذف" onclick="deleteShift(${idx})">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke="#d32f2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function addOrUpdateShift(e) {
+            e.preventDefault();
+            const personName = document.getElementById('personName').value.trim();
+            const name = document.getElementById('shiftName').value.trim();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const days = Array.from(document.querySelectorAll('.days-checkboxes input:checked')).map(cb => cb.value);
+            const notes = document.getElementById('notes').value.trim();
+            const editIndex = document.getElementById('editIndex').value;
+            let shifts = getShifts();
+            if (editIndex) {
+                shifts[editIndex] = { personName, name, startDate, endDate, days, notes };
+                document.getElementById('submitBtn').textContent = 'إضافة وردية';
+            } else {
+                shifts.push({ personName, name, startDate, endDate, days, notes });
+            }
+            saveShifts(shifts);
+            renderShifts();
+            document.getElementById('shiftForm').reset();
+            document.getElementById('editIndex').value = '';
+            if (startDate) document.getElementById('startDate').value = startDate;
+            if (endDate) document.getElementById('endDate').value = endDate;
+        }
+        function editShift(idx) {
+            const shifts = getShifts();
+            const shift = shifts[idx];
+            document.getElementById('personName').value = shift.personName || '';
+            document.getElementById('shiftName').value = shift.name;
+            document.getElementById('startDate').value = shift.startDate || '';
+            document.getElementById('endDate').value = shift.endDate || '';
+            document.querySelectorAll('.days-checkboxes input').forEach(cb => {
+                cb.checked = shift.days && shift.days.includes(cb.value);
+            });
+            document.getElementById('notes').value = shift.notes || '';
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('submitBtn').textContent = 'تحديث وردية';
+        }
+        function deleteShift(idx) {
+            if (!confirm('هل أنت متأكد من حذف هذه الوردية؟')) return;
+            let shifts = getShifts();
+            shifts.splice(idx, 1);
+            saveShifts(shifts);
+            renderShifts();
+        }
+        function autoSaveShifts() {
+            const shifts = getShifts();
+            saveShifts(shifts);
+        }
+        window.addEventListener('load', function() {
+            renderShifts();
+            document.getElementById('shiftForm').addEventListener('input', autoSaveShifts);
+            document.getElementById('shiftsList').addEventListener('input', autoSaveShifts);
+            document.getElementById('shiftsList').addEventListener('change', autoSaveShifts);
+            flatpickr("#startDate", {
+                dateFormat: "d/m/Y",
+                locale: "ar",
+                allowInput: true
+            });
+            flatpickr("#endDate", {
+                dateFormat: "d/m/Y",
+                locale: "ar",
+                allowInput: true
+            });
+        });
+    </script>
+</body>
+</html> 
